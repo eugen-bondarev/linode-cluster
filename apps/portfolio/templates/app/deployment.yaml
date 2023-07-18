@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app
+  name: app
+  namespace: portfolio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+        - image: nginx:latest
+          name: nginx
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          resources:
+            requests:
+              memory: 512Mi
+          volumeMounts:
+            - name: webspace
+              mountPath: /var/www/html
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+              readOnly: true
+        - image: eugbondarev/portfolio-app:latest
+          name: php
+          imagePullPolicy: Always
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  ["/bin/sh", "-c", "cp -a /var/www/files/. /var/www/html"]
+          env:
+            - name: DB_NAME
+              value: wp
+            - name: DB_USER
+              value: root
+            - name: DB_HOST
+              value: db
+            - name: DB_PASSWORD
+              value: root
+            - name: WP_HOME
+              value: http://143-42-222-231.ip.linodeusercontent.com
+            - name: WP_SITEURL
+              value: http://143-42-222-231.ip.linodeusercontent.com/wp
+            - name: WP_ENV
+              value: production
+          ports:
+            - containerPort: 9000
+              protocol: TCP
+          resources:
+            requests:
+              memory: 512Mi
+          volumeMounts:
+            - name: webspace
+              mountPath: /var/www/html
+      volumes:
+        - name: webspace
+          persistentVolumeClaim:
+            claimName: app
+        - name: nginx-config
+          configMap:
+            name: app
+            items:
+              - key: nginx.conf
+                path: default.conf
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
