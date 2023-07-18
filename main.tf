@@ -26,6 +26,23 @@ resource "linode_lke_cluster" "cluster1" {
   }
 }
 
+resource "linode_nodebalancer" "cluster1_main_nodebalancer" {
+  region = var.region
+  label  = "cluster1_main_nodebalancer"
+}
+
+resource "linode_nodebalancer_config" "cluster1_main_nodebalancer_config_http" {
+  nodebalancer_id = linode_nodebalancer.cluster1_main_nodebalancer.id
+  port            = 80
+  protocol        = "http"
+}
+
+resource "linode_nodebalancer_config" "cluster1_main_nodebalancer_config_https" {
+  nodebalancer_id = linode_nodebalancer.cluster1_main_nodebalancer.id
+  port            = 443
+  protocol        = "http"
+}
+
 // Export this cluster's attributes
 output "kubeconfig" {
   value     = linode_lke_cluster.cluster1.kubeconfig
@@ -34,6 +51,10 @@ output "kubeconfig" {
 
 output "api_endpoints" {
   value = linode_lke_cluster.cluster1.api_endpoints
+}
+
+output "nodebalancer_ip" {
+  value = linode_nodebalancer.cluster1_main_nodebalancer.ipv4
 }
 
 output "status" {
