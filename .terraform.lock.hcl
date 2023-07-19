@@ -6,6 +6,7 @@ provider "registry.terraform.io/linode/linode" {
   constraints = "2.5.1"
   hashes = [
     "h1:8LQGQbh483WLOyguSlgnyhOhXW6um6CNpK2ewgLTqIY=",
+    "h1:DbWWLX0o3K2IODHS4vQ5lIBwNy6yAL/HZFD4mPM8YCo=",
     "zh:0f0ce384dc923e8e5d6706f69e1cfaca864f107d866fedde49ec585afe90c394",
     "zh:13f5e5ec83eef48f91fe14f0843b323b75b6302d70d7f8870f2e5d4f59ccefef",
     "zh:230abf78ad02e17e042a410be3d0a1e80b332f00f51b20bdfb4d7ce2ff23a1d4",
