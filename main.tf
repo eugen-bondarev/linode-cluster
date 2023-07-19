@@ -16,13 +16,9 @@ resource "linode_lke_cluster" "cluster1" {
   label       = var.label
   region      = var.region
   tags        = var.tags
-
-  dynamic "pool" {
-    for_each = var.pools
-    content {
-      type  = pool.value["type"]
-      count = pool.value["count"]
-    }
+  pool {
+    type = var.pool.type
+    count = var.pool.count
   }
 }
 
@@ -37,40 +33,16 @@ resource "linode_nodebalancer_config" "cluster1_main_nodebalancer_config_http" {
   protocol        = "tcp"
 }
 
-# resource "linode_nodebalancer_config" "cluster1_main_nodebalancer_config_https" {
-#   nodebalancer_id = linode_nodebalancer.cluster1_main_nodebalancer.id
-#   port            = 443
-#   protocol        = "http"
-# }
-
-
-# resource "linode_instance" "instance" {
-#   count      = 1
-#   label      = "instance-${count.index + 1}"
-#   group      = "nodebalancer"
-#   region     = var.region
-#   type       = "g6-nanode-1"
-#   image      = "linode/ubuntu20.04"
-#   root_pass  = var.root_password
-#   private_ip = true
-# }
-
 data "linode_instances" "k8s_instances" {
   filter {
     name = "tags"
     values = var.tags
-    # values = [
-    #   "lke119841-177551-64b6f78cd5c4",
-    #   "lke119841-177551-64b6f78d36cd",
-    #   "lke119841-177551-64b6f78d936a",
-    #   "lke119841-177551-64b6f78df2c7"
-    # ]
   }
 }
 
 
 resource "linode_nodebalancer_node" "nodebalancer-node" {
-  count           = 4
+  count           = var.pool.count
   nodebalancer_id = linode_nodebalancer.cluster1_main_nodebalancer.id
   config_id       = linode_nodebalancer_config.cluster1_main_nodebalancer_config_http.id
   label           = element(data.linode_instances.k8s_instances.instances.*.label, count.index)

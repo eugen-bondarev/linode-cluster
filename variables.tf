@@ -27,16 +27,23 @@ variable "tags" {
   default     = []
 }
 
-variable "pools" {
-  description = "The Node Pool specifications for the Kubernetes cluster. (required)"
-  type = list(object({
-    type  = string
+variable "pool" {
+  description = "Node pool for k8s cluster. (required)"
+  type = object({
+    type = string
     count = number
-  }))
-  default = [
-    {
-      type  = "g6-standard-1"
-      count = 4
-    }
-  ]
+  })
 }
+# variable "pools" {
+#   description = "The Node Pool specifications for the Kubernetes cluster. (required)"
+#   type = list(object({
+#     type  = string
+#     count = number
+#   }))
+#   default = [
+#     {
+#       type  = "g6-standard-1"
+#       count = 4
+#     }
+#   ]
+# }
