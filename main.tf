@@ -57,13 +57,14 @@ resource "linode_nodebalancer_config" "cluster1_main_nodebalancer_config_http" {
 
 data "linode_instances" "k8s_instances" {
   filter {
-    name = "label"
-    values = [
-      "lke119841-177551-64b6f78cd5c4",
-      "lke119841-177551-64b6f78d36cd",
-      "lke119841-177551-64b6f78d936a",
-      "lke119841-177551-64b6f78df2c7"
-    ]
+    name = "tags"
+    values = var.tags
+    # values = [
+    #   "lke119841-177551-64b6f78cd5c4",
+    #   "lke119841-177551-64b6f78d36cd",
+    #   "lke119841-177551-64b6f78d936a",
+    #   "lke119841-177551-64b6f78df2c7"
+    # ]
   }
 }
 

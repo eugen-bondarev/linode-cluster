@@ -3,7 +3,7 @@ variable "token" {
 }
 
 variable "root_password" {
-  description = "API Token. (required)"
+  description = "Pass. (required)"
 }
 
 variable "k8s_version" {
