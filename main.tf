@@ -22,38 +22,15 @@ resource "linode_lke_cluster" "cluster1" {
   }
 }
 
-# resource "linode_nodebalancer" "cluster1_main_nodebalancer" {
-#   region = var.region
-#   label  = "cluster1_main_nodebalancer"
-# }
-
-# resource "linode_nodebalancer_config" "cluster1_main_nodebalancer_config_http" {
-#   nodebalancer_id = linode_nodebalancer.cluster1_main_nodebalancer.id
-#   port            = 80
-#   protocol        = "tcp"
-# }
-
-# data "linode_instances" "k8s_instances" {
-#   depends_on = [ linode_lke_cluster.cluster1 ]
-# }
-
-# resource "linode_nodebalancer_node" "nodebalancer-node" {
-#   depends_on = [ data.linode_instances.k8s_instances ]
-#   count           = var.pool.count
-#   nodebalancer_id = linode_nodebalancer.cluster1_main_nodebalancer.id
-#   config_id       = linode_nodebalancer_config.cluster1_main_nodebalancer_config_http.id
-#   label           = element(data.linode_instances.k8s_instances.instances.*.label, count.index)
-#   address = "${
-#     element(data.linode_instances.k8s_instances.instances.*.private_ip_address, count.index)
-#     }:${30177
-#   }"
-#   mode = "accept"
-# }
-
 // Export this cluster's attributes
 output "kubeconfig" {
   value     = linode_lke_cluster.cluster1.kubeconfig
   sensitive = true
+}
+
+resource "local_file" "kubeconfig" {
+  content  = base64decode(linode_lke_cluster.cluster1.kubeconfig)
+  filename = "./kubeconfig"
 }
 
 output "api_endpoints" {
