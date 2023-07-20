@@ -2,10 +2,6 @@ variable "token" {
   description = "API Token. (required)"
 }
 
-variable "root_password" {
-  description = "Pass. (required)"
-}
-
 variable "k8s_version" {
   description = "The Kubernetes version to use for this cluster. (required)"
   default     = "1.26"
@@ -30,7 +26,7 @@ variable "tags" {
 variable "pool" {
   description = "Node pool for k8s cluster. (required)"
   type = object({
-    type = string
+    type  = string
     count = number
   })
 }
