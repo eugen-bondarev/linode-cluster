@@ -1,5 +1,7 @@
 
-
+provider "kubernetes" {
+  config_path = "${abspath(path.root)}/../cloud/kubeconfig"
+}
 
 provider "helm" {
   kubernetes {
@@ -30,6 +32,15 @@ resource "helm_release" "ingress" {
   chart      = "./apps/ingress"
 }
 
+
+data "kubernetes_service_v1" "ingress_nginx_controller" {
+  depends_on = [helm_release.ingress, helm_release.nginx]
+  metadata {
+    name      = "ingress-nginx-controller"
+    namespace = "portfolio"
+  }
+}
+
 # data "kubernetes_ingress_v1" "k8s_ingress" {
 #   depends_on = [helm_release.ingress]
 #   metadata {
@@ -39,13 +50,14 @@ resource "helm_release" "ingress" {
 # }
 
 resource "helm_release" "portfolio" {
-  # depends_on = [data.kubernetes_ingress_v1.k8s_ingress]
+  # depends_on = [data.kubernetes_service_v1.ingress_nginx_controller]
   name      = "portfolio"
   chart     = "./apps/portfolio"
   namespace = "portfolio"
-  # set {
-  #   name  = "host"
-  #   value = data.kubernetes_ingress_v1.k8s_ingress.status.0.load_balancer.0.ingress.0.hostname
-  #   # value = yamldecode(helm_release.ingress.manifest).status.loadBalancer.ingress[0].hostname
-  # }
+  set {
+    name  = "host"
+    value = data.kubernetes_service_v1.ingress_nginx_controller.status[0]["load_balancer"][0]["ingress"][0]["hostname"]
+    # value = data.kubernetes_ingress_v1.k8s_ingress.status.0.load_balancer.0.ingress.0.hostname
+    # value = yamldecode(helm_release.ingress.manifest).status.loadBalancer.ingress[0].hostname
+  }
 }
