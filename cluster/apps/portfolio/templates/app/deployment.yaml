@@ -50,10 +50,10 @@ spec:
               value: db
             - name: DB_PASSWORD
               value: root
-            - name: WP_HOME
-              value: {{ .Values.host }}
-            - name: WP_SITEURL
-              value: {{ .Values.host }}/wp
+            # - name: WP_HOME
+            #   value: http://172.104.231.19
+            # - name: WP_SITEURL
+            #   value: http://172.104.231.19/wp
             - name: WP_ENV
               value: production
           ports:
