@@ -10,3 +10,13 @@ resource "helm_release" "nginx" {
   chart      = "ingress-nginx"
   namespace  = "portfolio"
 }
+
+resource "helm_release" "portfolio" {
+  name      = "portfolio"
+  chart     = "./apps/portfolio"
+  namespace = "portfolio"
+  set {
+    name  = "host"
+    value = "http://139-144-161-5.ip.linodeusercontent.com"
+  }
+}

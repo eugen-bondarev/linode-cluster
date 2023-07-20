@@ -51,9 +51,9 @@ spec:
             - name: DB_PASSWORD
               value: root
             - name: WP_HOME
-              value: http://143-42-222-20.ip.linodeusercontent.com
+              value: {{ .Values.host }}
             - name: WP_SITEURL
-              value: http://143-42-222-20.ip.linodeusercontent.com/wp
+              value: {{ .Values.host }}/wp
             - name: WP_ENV
               value: production
           ports:
