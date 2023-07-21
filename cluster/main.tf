@@ -33,6 +33,27 @@ resource "helm_release" "ingress" {
   namespace  = "portfolio"
 }
 
+provider "google" {
+  project     = "k8s-test-358716"
+  region      = "eu-central"
+  credentials = "../secrets/google-auth.json"
+}
+
+resource "google_dns_managed_zone" "example_zone" {
+  depends_on  = [data.kubernetes_service_v1.ingress_nginx_controller]
+  name        = "example-zone"
+  dns_name    = "eugen-bondarev.com."
+  description = "Example DNS zone"
+}
+
+resource "google_dns_record_set" "dns_set" {
+  depends_on   = [google_dns_managed_zone.example_zone]
+  name         = "eugen-bondarev.com."
+  type         = "A"
+  ttl          = 300
+  managed_zone = "example-zone"
+  rrdatas      = [data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.ip]
+}
 
 data "kubernetes_service_v1" "ingress_nginx_controller" {
   depends_on = [helm_release.ingress, helm_release.nginx]
