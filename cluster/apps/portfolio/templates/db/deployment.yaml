@@ -28,6 +28,12 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: mysql
+        # - image: busybox:latest
+        #   name: busybox
+          # volumeMounts:
+          #   - mountPath: /var/lib/mysql
+          #     name: mysql
+          #     readOnly: true
       volumes:
         - name: mysql
           persistentVolumeClaim:
