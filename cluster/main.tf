@@ -63,30 +63,29 @@ data "kubernetes_service_v1" "ingress_nginx_controller" {
   }
 }
 
-
-# resource "local_file" "kubeconfig" {
-#   depends_on = [data.kubernetes_service_v1.ingress_nginx_controller]
-#   content    = data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.hostname
-#   filename   = "./debug.log"
-# }
-
-
-
-# data "kubernetes_ingress_v1" "k8s_ingress" {
-#   depends_on = [helm_release.ingress]
-#   metadata {
-#     name      = "nginx"
-#     namespace = "portfolio"
-#   }
-# }
-
 resource "helm_release" "portfolio" {
-  depends_on = [data.kubernetes_service_v1.ingress_nginx_controller]
-  name       = "portfolio"
-  chart      = "./apps/portfolio"
-  namespace  = "portfolio"
+  depends_on    = [data.kubernetes_service_v1.ingress_nginx_controller]
+  name          = "portfolio"
+  chart         = "./apps/portfolio"
+  namespace     = "portfolio"
+  recreate_pods = true
   set {
     name  = "host"
     value = data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.hostname
+  }
+
+  set {
+    name  = "db.name"
+    value = var.db.name
+  }
+
+  set {
+    name  = "db.host"
+    value = var.db.host
+  }
+
+  set {
+    name  = "db.root_password"
+    value = var.db.root_password
   }
 }

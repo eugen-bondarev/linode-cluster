@@ -43,13 +43,13 @@ spec:
                   ["/bin/sh", "-c", "cp -a /var/www/files/. /var/www/html"]
           env:
             - name: DB_NAME
-              value: wp
+              value: {{ .Values.db.name }}
             - name: DB_USER
               value: root
             - name: DB_HOST
-              value: db
+              value: {{ .Values.db.host }}
             - name: DB_PASSWORD
-              value: root
+              value: {{ .Values.db.root_password }}
             - name: WP_HOME
               value: http://{{ .Values.host }}
             - name: WP_SITEURL
