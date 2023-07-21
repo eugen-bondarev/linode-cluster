@@ -28,12 +28,13 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: mysql
-        # - image: busybox:latest
-        #   name: busybox
-          # volumeMounts:
-          #   - mountPath: /var/lib/mysql
-          #     name: mysql
-          #     readOnly: true
+        - image: busybox:latest
+          name: busybox
+          command: ['sh', '-c', 'while true; do echo "hey"; sleep 3; done']
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql
+              readOnly: true
       volumes:
         - name: mysql
           persistentVolumeClaim:
