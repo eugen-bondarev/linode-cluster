@@ -1,3 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: github-key
+  namespace: portfolio
+data:
+  private.key: {{ .Values.github_key }}
+  public.key: {{ .Values.github_key_pub }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -28,14 +37,46 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: mysql
-        - image: busybox:latest
-          name: busybox
-          command: ['sh', '-c', 'while true; do echo "hey"; sleep 3; done']
+        - image: alpine:latest
+          name: alpine
+          command: [
+            'sh', '-c', '
+              apk update &&
+              apk add git && 
+              apk add openssh-client && 
+              apk add mysql-client && 
+              apk add mariadb-connector-c && 
+              mkdir /root/.ssh &&
+              cat /keys/github | base64 -d > ~/.ssh/id_rsa &&
+              cp /keys/github.pub ~/.ssh/github.pub &&
+              chmod -R 400 ~/.ssh &&
+              ssh-keyscan github.com >> ~/.ssh/known_hosts &&
+              git clone git@github.com:eugen-bondarev/linode-cluster-db-backup.git &&
+              git config --global user.email "eug.bondarev@gmail.com" &&
+              while true;
+                do
+                  mysqldump -uroot -h db -pDOLOR_IPSUM_LOREM_42 wp > /linode-cluster-db-backup/backup.sql;
+                  cd /linode-cluster-db-backup; 
+                  git add . ;
+                  git commit -m "Update";
+                  git push;
+                  sleep 25s; 
+              done'
+          ]
           volumeMounts:
-            - mountPath: /var/lib/mysql
-              name: mysql
-              readOnly: true
+            - name: github-key-vol
+              mountPath: /keys
+            - name: mysql
+              mountPath: /var/lib/mysql
       volumes:
         - name: mysql
           persistentVolumeClaim:
             claimName: mysql
+        - name: github-key-vol
+          configMap:
+            name: github-key
+            items:
+              - key: private.key
+                path: github
+              - key: public.key
+                path: github.pub

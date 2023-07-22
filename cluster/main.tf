@@ -69,6 +69,17 @@ resource "helm_release" "portfolio" {
   chart         = "./apps/portfolio"
   namespace     = "portfolio"
   recreate_pods = true
+
+  set {
+    name  = "github_key"
+    value = base64encode(file("../secrets/github-key"))
+  }
+
+  set {
+    name  = "github_key_pub"
+    value = file("../secrets/github-key.pub")
+  }
+
   set {
     name  = "host"
     value = data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.hostname
