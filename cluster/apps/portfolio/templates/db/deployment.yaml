@@ -60,7 +60,7 @@ spec:
                   git add . ;
                   git commit -m "Update";
                   git push;
-                  sleep 25s; 
+                  sleep 1h; 
               done'
           ]
           volumeMounts:
