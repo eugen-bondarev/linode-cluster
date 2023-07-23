@@ -1,11 +1,11 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: prometheus-service
+  name: grafana
   namespace: portfolio
 spec:
   type: ExternalName
-  externalName: prometheus-server.default.svc.cluster.local
+  externalName: grafana.metrics.svc.cluster.local
   ports:
     - port: 80
       targetPort: 80

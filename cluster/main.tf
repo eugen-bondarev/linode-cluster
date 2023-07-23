@@ -31,6 +31,16 @@ resource "helm_release" "ingress" {
   name       = "ingress"
   chart      = "./apps/ingress"
   namespace  = "portfolio"
+
+  set {
+    name  = "tls.crt"
+    value = base64encode(file("../secrets/tls.crt"))
+  }
+
+  set {
+    name  = "tls.key"
+    value = base64encode(file("../secrets/tls.key"))
+  }
 }
 
 provider "google" {
@@ -109,7 +119,7 @@ resource "helm_release" "prometheus" {
 }
 
 resource "helm_release" "grafana" {
-  name       = "prometheus"
+  name       = "grafana"
   repository = "https://grafana.github.io/helm-charts"
   chart      = "grafana"
   namespace  = "metrics"
