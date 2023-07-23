@@ -39,6 +39,9 @@ spec:
               name: mysql
         - image: alpine:latest
           name: alpine
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: {{ .Values.db.root_password }}
           command: [
             'sh', '-c', '
               apk update &&
@@ -55,12 +58,12 @@ spec:
               git config --global user.email "eug.bondarev@gmail.com" &&
               while true;
                 do
-                  mysqldump -uroot -h db -pDOLOR_IPSUM_LOREM_42 wp > /linode-cluster-db-backup/backup.sql;
+                  mysqldump -uroot -h db -p$MYSQL_ROOT_PASSWORD wp > /linode-cluster-db-backup/backup.sql;
                   cd /linode-cluster-db-backup; 
                   git add . ;
                   git commit -m "Update";
                   git push;
-                  sleep 1h; 
+                  sleep 5h; 
               done'
           ]
           volumeMounts:

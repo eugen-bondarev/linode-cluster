@@ -95,7 +95,7 @@ resource "helm_release" "portfolio" {
   }
 
   set {
-    name  = "host"
+    name = "host"
     # value = data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.hostname
     value = "eugen-bondarev.com"
   }
@@ -128,4 +128,8 @@ resource "helm_release" "grafana" {
   repository = "https://grafana.github.io/helm-charts"
   chart      = "grafana"
   namespace  = "metrics"
+}
+
+output "test" {
+  value = helm_release.portfolio.manifest
 }

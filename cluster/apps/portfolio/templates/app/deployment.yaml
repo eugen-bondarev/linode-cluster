@@ -51,9 +51,9 @@ spec:
             - name: DB_PASSWORD
               value: {{ .Values.db.root_password }}
             - name: WP_HOME
-              value: http://{{ .Values.host }}
+              value: https://{{ .Values.host }}
             - name: WP_SITEURL
-              value: http://{{ .Values.host }}/wp
+              value: https://{{ .Values.host }}/wp
             - name: WP_ENV
               value: production
           ports:
