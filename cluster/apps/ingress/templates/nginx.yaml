@@ -20,3 +20,10 @@ spec:
                 name: nginx
                 port:
                   number: 80
+          - path: /metrics
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus-service
+                port:
+                  number: 80

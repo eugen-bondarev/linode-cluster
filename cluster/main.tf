@@ -8,9 +8,9 @@ provider "helm" {
     config_path = "${abspath(path.root)}/../cloud/kubeconfig"
     # config_path = "~/.kube/cluster1-kubeconfig"
   }
-  experiments {
-    manifest = true
-  }
+  # experiments {
+  #   manifest = true
+  # }
 }
 
 resource "helm_release" "namespaces" {
@@ -99,4 +99,18 @@ resource "helm_release" "portfolio" {
     name  = "db.root_password"
     value = var.db.root_password
   }
+}
+
+resource "helm_release" "prometheus" {
+  name       = "prometheus"
+  repository = "https://prometheus-community.github.io/helm-charts"
+  chart      = "prometheus"
+  namespace  = "metrics"
+}
+
+resource "helm_release" "grafana" {
+  name       = "prometheus"
+  repository = "https://grafana.github.io/helm-charts"
+  chart      = "grafana"
+  namespace  = "metrics"
 }
