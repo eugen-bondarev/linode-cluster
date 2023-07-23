@@ -96,7 +96,8 @@ resource "helm_release" "portfolio" {
 
   set {
     name  = "host"
-    value = data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.hostname
+    # value = data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.hostname
+    value = "eugen-bondarev.com"
   }
 
   set {
