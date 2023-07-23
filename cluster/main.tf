@@ -24,6 +24,10 @@ resource "helm_release" "nginx" {
   repository = "https://kubernetes.github.io/ingress-nginx"
   chart      = "ingress-nginx"
   namespace  = "portfolio"
+  set {
+    name  = "controller.extraArgs.default-ssl-certificate"
+    value = "portfolio/tls"
+  }
 }
 
 resource "helm_release" "ingress" {
