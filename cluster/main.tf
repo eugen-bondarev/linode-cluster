@@ -1,12 +1,18 @@
 
 provider "kubernetes" {
-  config_path = "${abspath(path.root)}/../cloud/kubeconfig"
+  config_path = "${abspath(path.root)}/secrets/kubeconfig"
 }
 
 provider "helm" {
   kubernetes {
-    config_path = "${abspath(path.root)}/../cloud/kubeconfig"
+    config_path = "${abspath(path.root)}/secrets/kubeconfig"
   }
+}
+
+provider "google" {
+  project     = "k8s-test-358716"
+  region      = "eu-central"
+  credentials = "../secrets/google-auth.json"
 }
 
 resource "helm_release" "namespaces" {
@@ -26,12 +32,6 @@ resource "helm_release" "nginx" {
   }
 }
 
-provider "google" {
-  project     = "k8s-test-358716"
-  region      = "eu-central"
-  credentials = "../secrets/google-auth.json"
-}
-
 resource "google_dns_managed_zone" "example_zone" {
   depends_on  = [data.kubernetes_service_v1.ingress_nginx_controller]
   name        = "example-zone"
@@ -39,30 +39,17 @@ resource "google_dns_managed_zone" "example_zone" {
   description = "Example DNS zone"
 }
 
-resource "google_dns_record_set" "dns_set" {
+resource "google_dns_record_set" "common_dns" {
+  for_each = toset([
+    "eugen-bondarev.com",
+    "metrics.eugen-bondarev.com",
+    "pipelines.eugen-bondarev.com",
+  ])
   depends_on   = [google_dns_managed_zone.example_zone]
-  name         = "eugen-bondarev.com."
+  name         = "${each.value}."
   type         = "A"
   ttl          = 300
-  managed_zone = "example-zone"
-  rrdatas      = [data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.ip]
-}
-
-resource "google_dns_record_set" "dns_set_metrics" {
-  depends_on   = [google_dns_managed_zone.example_zone]
-  name         = "metrics.eugen-bondarev.com."
-  type         = "A"
-  ttl          = 300
-  managed_zone = "example-zone"
-  rrdatas      = [data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.ip]
-}
-
-resource "google_dns_record_set" "dns_set_pipelines" {
-  depends_on   = [google_dns_managed_zone.example_zone]
-  name         = "pipelines.eugen-bondarev.com."
-  type         = "A"
-  ttl          = 300
-  managed_zone = "example-zone"
+  managed_zone = google_dns_managed_zone.example_zone.name
   rrdatas      = [data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.ip]
 }
 
@@ -92,8 +79,7 @@ resource "helm_release" "portfolio" {
   }
 
   set {
-    name = "host"
-    # value = data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.hostname
+    name  = "host"
     value = "eugen-bondarev.com"
   }
 
@@ -156,17 +142,15 @@ resource "helm_release" "jenkins_expose_service" {
   namespace = "portfolio"
 }
 
-output "test" {
-  value = helm_release.portfolio.manifest
-}
-
-
 resource "helm_release" "ingress" {
-  depends_on = [helm_release.namespaces, helm_release.jenkins_expose_service]
-  name       = "ingress"
-  chart      = "./apps/ingress"
-  namespace  = "portfolio"
-  version    = "1.0.1"
+  depends_on = [
+    helm_release.namespaces,
+    helm_release.jenkins_expose_service,
+    helm_release.grafana_expose_service
+  ]
+  name      = "ingress"
+  chart     = "./apps/ingress"
+  namespace = "portfolio"
 
   set {
     name  = "tls.crt"

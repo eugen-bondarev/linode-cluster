@@ -30,7 +30,7 @@ output "kubeconfig" {
 
 resource "local_file" "kubeconfig" {
   content  = base64decode(linode_lke_cluster.cluster1.kubeconfig)
-  filename = "./kubeconfig"
+  filename = "./../secrets/kubeconfig"
 }
 
 output "api_endpoints" {
