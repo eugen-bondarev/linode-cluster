@@ -16,7 +16,7 @@ spec:
       secretName: tls
   rules:
     - host: eugen-bondarev.com
-      http:      
+      http:
         paths:
           - path: /
             pathType: Prefix
@@ -26,12 +26,22 @@ spec:
                 port:
                   number: 80
     - host: metrics.eugen-bondarev.com
-      http:      
+      http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: grafana-service
+                name: grafana-expose-service
+                port:
+                  number: 80
+    - host: pipelines.eugen-bondarev.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: jenkins-expose-service
                 port:
                   number: 80

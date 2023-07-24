@@ -30,23 +30,6 @@ resource "helm_release" "nginx" {
   }
 }
 
-resource "helm_release" "ingress" {
-  depends_on = [helm_release.namespaces]
-  name       = "ingress"
-  chart      = "./apps/ingress"
-  namespace  = "portfolio"
-
-  set {
-    name  = "tls.crt"
-    value = base64encode(file("../secrets/tls.crt"))
-  }
-
-  set {
-    name  = "tls.key"
-    value = base64encode(file("../secrets/tls.key"))
-  }
-}
-
 provider "google" {
   project     = "k8s-test-358716"
   region      = "eu-central"
@@ -130,6 +113,54 @@ resource "helm_release" "grafana" {
   namespace  = "metrics"
 }
 
+resource "helm_release" "grafana_expose_service" {
+  name      = "grafana-expose-service"
+  chart     = "./apps/grafana-expose-service"
+  namespace = "portfolio"
+}
+
+resource "kubernetes_namespace_v1" "jenkins_namespace" {
+  metadata {
+    name = "jenkins"
+    labels = {
+      name = "jenkins"
+    }
+  }
+}
+
+resource "helm_release" "jenkins_release" {
+  depends_on = [kubernetes_namespace_v1.jenkins_namespace]
+  name       = "jenkins"
+  repository = "https://charts.jenkins.io"
+  chart      = "jenkins"
+  namespace  = "jenkins"
+}
+
+resource "helm_release" "jenkins_expose_service" {
+  name      = "jenkins-expose-service"
+  chart     = "./apps/jenkins-expose-service"
+  namespace = "portfolio"
+}
+
 output "test" {
   value = helm_release.portfolio.manifest
+}
+
+
+resource "helm_release" "ingress" {
+  depends_on = [helm_release.namespaces, helm_release.jenkins_expose_service]
+  name       = "ingress"
+  chart      = "./apps/ingress"
+  namespace  = "portfolio"
+  version    = "1.0.1"
+
+  set {
+    name  = "tls.crt"
+    value = base64encode(file("../secrets/tls.crt"))
+  }
+
+  set {
+    name  = "tls.key"
+    value = base64encode(file("../secrets/tls.key"))
+  }
 }

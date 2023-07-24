@@ -1,11 +1,11 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: grafana
+  name: jenkins-expose-service
   namespace: portfolio
 spec:
   type: ExternalName
-  externalName: grafana.metrics.svc.cluster.local
+  externalName: jenkins.jenkins.svc.cluster.local
   ports:
     - port: 80
-      targetPort: 80
+      targetPort: 8080
