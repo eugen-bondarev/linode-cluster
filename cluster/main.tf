@@ -1,11 +1,11 @@
 
 provider "kubernetes" {
-  config_path = "${abspath(path.root)}/secrets/kubeconfig"
+  config_path = "${abspath(path.root)}/../secrets/kubeconfig"
 }
 
 provider "helm" {
   kubernetes {
-    config_path = "${abspath(path.root)}/secrets/kubeconfig"
+    config_path = "${abspath(path.root)}/../secrets/kubeconfig"
   }
 }
 
@@ -15,13 +15,22 @@ provider "google" {
   credentials = "../secrets/google-auth.json"
 }
 
-resource "helm_release" "namespaces" {
-  name  = "namespaces"
-  chart = "./apps/namespaces"
+resource "kubernetes_namespace_v1" "namespaces" {
+  for_each = toset([
+    "jenkins",
+    "portfolio",
+    "metrics"
+  ])
+  metadata {
+    name = each.value
+    labels = {
+      name = each.value
+    }
+  }
 }
 
 resource "helm_release" "nginx" {
-  depends_on = [helm_release.namespaces]
+  depends_on = [kubernetes_namespace_v1.namespaces]
   name       = "ingress-nginx"
   repository = "https://kubernetes.github.io/ingress-nginx"
   chart      = "ingress-nginx"
@@ -119,17 +128,8 @@ resource "helm_release" "grafana_expose_service" {
   namespace = "portfolio"
 }
 
-resource "kubernetes_namespace_v1" "jenkins_namespace" {
-  metadata {
-    name = "jenkins"
-    labels = {
-      name = "jenkins"
-    }
-  }
-}
-
 resource "helm_release" "jenkins_release" {
-  depends_on = [kubernetes_namespace_v1.jenkins_namespace]
+  depends_on = [kubernetes_namespace_v1.namespaces]
   name       = "jenkins"
   repository = "https://charts.jenkins.io"
   chart      = "jenkins"
@@ -144,7 +144,7 @@ resource "helm_release" "jenkins_expose_service" {
 
 resource "helm_release" "ingress" {
   depends_on = [
-    helm_release.namespaces,
+    kubernetes_namespace_v1.namespaces,
     helm_release.jenkins_expose_service,
     helm_release.grafana_expose_service
   ]
