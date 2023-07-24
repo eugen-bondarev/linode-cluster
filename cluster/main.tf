@@ -41,11 +41,10 @@ resource "helm_release" "nginx" {
   }
 }
 
-resource "google_dns_managed_zone" "example_zone" {
-  depends_on  = [data.kubernetes_service_v1.ingress_nginx_controller]
-  name        = "example-zone"
-  dns_name    = "eugen-bondarev.com."
-  description = "Example DNS zone"
+resource "google_dns_managed_zone" "default_zone" {
+  depends_on = [data.kubernetes_service_v1.ingress_nginx_controller]
+  name       = "default-zone"
+  dns_name   = "eugen-bondarev.com."
 }
 
 resource "google_dns_record_set" "common_dns" {
@@ -54,11 +53,11 @@ resource "google_dns_record_set" "common_dns" {
     "metrics.eugen-bondarev.com",
     "pipelines.eugen-bondarev.com",
   ])
-  depends_on   = [google_dns_managed_zone.example_zone]
+  depends_on   = [google_dns_managed_zone.default_zone]
   name         = "${each.value}."
   type         = "A"
   ttl          = 300
-  managed_zone = google_dns_managed_zone.example_zone.name
+  managed_zone = google_dns_managed_zone.default_zone.name
   rrdatas      = [data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.ip]
 }
 
@@ -108,26 +107,6 @@ resource "helm_release" "portfolio" {
   }
 }
 
-resource "helm_release" "prometheus" {
-  name       = "prometheus"
-  repository = "https://prometheus-community.github.io/helm-charts"
-  chart      = "prometheus"
-  namespace  = "metrics"
-}
-
-resource "helm_release" "grafana" {
-  name       = "grafana"
-  repository = "https://grafana.github.io/helm-charts"
-  chart      = "grafana"
-  namespace  = "metrics"
-}
-
-resource "helm_release" "grafana_expose_service" {
-  name      = "grafana-expose-service"
-  chart     = "./apps/grafana-expose-service"
-  namespace = "portfolio"
-}
-
 resource "helm_release" "jenkins_release" {
   depends_on = [kubernetes_namespace_v1.namespaces]
   name       = "jenkins"
@@ -143,14 +122,10 @@ resource "helm_release" "jenkins_expose_service" {
 }
 
 resource "helm_release" "ingress" {
-  depends_on = [
-    kubernetes_namespace_v1.namespaces,
-    helm_release.jenkins_expose_service,
-    helm_release.grafana_expose_service
-  ]
-  name      = "ingress"
-  chart     = "./apps/ingress"
-  namespace = "portfolio"
+  depends_on = [kubernetes_namespace_v1.namespaces]
+  name       = "ingress"
+  chart      = "./apps/ingress"
+  namespace  = "portfolio"
 
   set {
     name  = "tls.crt"
