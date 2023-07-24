@@ -48,6 +48,24 @@ resource "google_dns_record_set" "dns_set" {
   rrdatas      = [data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.ip]
 }
 
+resource "google_dns_record_set" "dns_set_metrics" {
+  depends_on   = [google_dns_managed_zone.example_zone]
+  name         = "metrics.eugen-bondarev.com."
+  type         = "A"
+  ttl          = 300
+  managed_zone = "example-zone"
+  rrdatas      = [data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.ip]
+}
+
+resource "google_dns_record_set" "dns_set_pipelines" {
+  depends_on   = [google_dns_managed_zone.example_zone]
+  name         = "pipelines.eugen-bondarev.com."
+  type         = "A"
+  ttl          = 300
+  managed_zone = "example-zone"
+  rrdatas      = [data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.ip]
+}
+
 data "kubernetes_service_v1" "ingress_nginx_controller" {
   depends_on = [helm_release.ingress, helm_release.nginx]
   metadata {
