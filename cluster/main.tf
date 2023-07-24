@@ -6,11 +6,7 @@ provider "kubernetes" {
 provider "helm" {
   kubernetes {
     config_path = "${abspath(path.root)}/../cloud/kubeconfig"
-    # config_path = "~/.kube/cluster1-kubeconfig"
   }
-  # experiments {
-  #   manifest = true
-  # }
 }
 
 resource "helm_release" "namespaces" {
