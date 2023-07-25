@@ -4,22 +4,34 @@ controller:
     - kubernetes:latest
     - workflow-aggregator:latest
     - configuration-as-code:latest
+    - job-dsl:latest
   additionalPlugins:
     - blueocean:1.27.5
   JCasC:
-    enabled: true
     configScripts:
       welcome-message: |
         jenkins:
           systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed 'as code'.
-      my-test: |
+      pipeline-job: | 
         jobs:
           - script: >
-            multibranchPipelineJob('configuration-as-code') {
-              branchSources {
-                git {
-                  id = 'configuration-as-code'
-                  remote('https://github.com/jenkinsci/configuration-as-code-plugin.git')
+              multibranchPipelineJob('image-jenkins') {
+                branchSources {
+                  github {
+                    // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
+                    id('12312313') // IMPORTANT: use a constant and unique identifier
+                    scanCredentialsId('github')
+                    repoOwner('my-org')
+                    repository('my-repository')
+                    apiUri('http://my-github-server/api/v3') // Optional, needed for private github enterprise servers
+                  }
+                }
+                orphanedItemStrategy {
+                  discardOldItems {
+                    numToKeep(1)
+                  }
+                }
+                triggers {
+                  periodic(5)
                 }
               }
-            }

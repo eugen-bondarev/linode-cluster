@@ -4,6 +4,7 @@ resource "helm_release" "jenkins" {
   repository = "https://charts.jenkins.io"
   chart      = "jenkins"
   namespace  = "jenkins"
+  timeout    = 60 * 10
 
   values = [
     file("./pipelines.test.yaml")
