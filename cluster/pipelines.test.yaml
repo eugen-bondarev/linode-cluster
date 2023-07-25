@@ -1,0 +1,25 @@
+controller:
+  installPlugins:
+    - git:latest
+    - kubernetes:latest
+    - workflow-aggregator:latest
+    - configuration-as-code:latest
+  additionalPlugins:
+    - blueocean:1.27.5
+  JCasC:
+    enabled: true
+    configScripts:
+      welcome-message: |
+        jenkins:
+          systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed 'as code'.
+      my-test: |
+        jobs:
+          - script: >
+            multibranchPipelineJob('configuration-as-code') {
+              branchSources {
+                git {
+                  id = 'configuration-as-code'
+                  remote('https://github.com/jenkinsci/configuration-as-code-plugin.git')
+                }
+              }
+            }

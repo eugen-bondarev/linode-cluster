@@ -6,7 +6,7 @@ resource "helm_release" "jenkins" {
   namespace  = "jenkins"
 
   values = [
-    jsonencode({ controller : { installPlugins : ["blueocean:1.27.5"] } })
+    file("./pipelines.test.yaml")
   ]
 }
 
