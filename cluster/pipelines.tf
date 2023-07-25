@@ -4,6 +4,10 @@ resource "helm_release" "jenkins" {
   repository = "https://charts.jenkins.io"
   chart      = "jenkins"
   namespace  = "jenkins"
+
+  values = [
+    jsonencode({ controller : { installPlugins : ["blueocean:1.27.5"] } })
+  ]
 }
 
 resource "helm_release" "jenkins_expose_service" {
