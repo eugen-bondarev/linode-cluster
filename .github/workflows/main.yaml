@@ -42,8 +42,15 @@ jobs:
     container:
       image: hashicorp/terraform:1.5
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v3
+      # - name: Download artifacts
+      - uses: actions/download-artifact@v3
+        with:
+          name: state-artifact
+          path: ./
+      - uses: actions/download-artifact@v3
+        with:
+          name: terraform-credentials-artifact
+          path: ~/.terraform.d/credentials.tfrc.json
       - name: Init
         run: terraform -chdir="cloud" init
       - name: Plan
