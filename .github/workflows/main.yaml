@@ -21,9 +21,9 @@ jobs:
         with:
           name: my-artifact
           path: ./
-  terraform-init:
+  terraform-cloud:
     needs: deploy
-    name: Terraform
+    name: Terraform Cloud
     runs-on: ubuntu-22.04
     container:
       image: hashicorp/terraform:1.5
@@ -43,8 +43,27 @@ jobs:
         env:
           TF_VAR_token: ${{ secrets.TF_VAR_token }}
         run: terraform -chdir="cloud" apply plan
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: ./
+  terraform-cluster:
+    name: Terraform Cluster
+    needs: terraform-cloud
+    runs-on: ubuntu-22.04
+    container:
+      image: hashicorp/terraform:1.5
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
+          path: ./
+      - name: Check
+        run: ls && ls ./secrets
   clean-up:
-    needs: terraform-init
+    needs: terraform-cluster
     name: Clean Up
     runs-on: ubuntu-22.04
     container:
