@@ -39,11 +39,11 @@ resource "helm_release" "ingress" {
 
   set {
     name  = "tls.crt"
-    value = base64encode(file("${abspath(path.root)}/../secrets/tls.crt"))
+    value = base64encode(file("${abspath(path.root)}/secrets/tls.crt"))
   }
 
   set {
     name  = "tls.key"
-    value = base64encode(file("${abspath(path.root)}/../secrets/tls.key"))
+    value = base64encode(file("${abspath(path.root)}/secrets/tls.key"))
   }
 }
