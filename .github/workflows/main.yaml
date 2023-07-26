@@ -18,7 +18,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: state-artifact
-          path: ./
+          path: 
+            ./
+            !.git
   terraform-login:
     name: Terraform Login
     needs: checkout
