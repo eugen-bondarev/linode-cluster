@@ -79,12 +79,17 @@ jobs:
         with:
           name: state-artifact
           path: ./
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: terraform-credentials-artifact
+          path: ~/.terraform.d
       - name: Init
         run: terraform -chdir="cluster" init
       - name: Plan
-        run: terraform -chdir="cluster" plan -var-file="variables.secret.tfvars" -out plan
+        run: terraform -chdir="cluster" plan -var-file="variables.secret.tfvars"
       - name: Apply
-        run: terraform -chdir="cluster" apply plan
+        run: terraform -chdir="cluster" apply
   clean-up:
     needs: terraform-cluster
     name: Clean Up
