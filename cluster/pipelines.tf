@@ -1,10 +1,11 @@
 resource "helm_release" "jenkins" {
-  depends_on = [kubernetes_namespace_v1.namespaces]
-  name       = "jenkins"
-  repository = "https://charts.jenkins.io"
-  chart      = "jenkins"
-  namespace  = "jenkins"
-  timeout    = 60 * 10
+  depends_on    = [kubernetes_namespace_v1.namespaces]
+  name          = "jenkins"
+  repository    = "https://charts.jenkins.io"
+  chart         = "jenkins"
+  namespace     = "jenkins"
+  timeout       = 60 * 10
+  recreate_pods = true
 
   values = [
     file("./pipelines.test.yaml")
