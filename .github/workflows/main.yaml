@@ -22,6 +22,7 @@ jobs:
           name: my-artifact
           path: ./
   terraform-init:
+    needs: deploy
     name: Terraform Init
     runs-on: ubuntu-22.04
     container:
@@ -30,6 +31,7 @@ jobs:
       - name: Terraform
         run: terraform -chdir="cloud" init
   clean-up:
+    needs: terraform-init
     name: Clean Up
     runs-on: ubuntu-22.04
     container:
