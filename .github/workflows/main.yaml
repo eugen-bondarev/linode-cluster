@@ -21,6 +21,20 @@ jobs:
         with:
           name: my-artifact
           path: ./
+  terraform-init:
+    name: Terraform Init
+    runs-on: ubuntu-22.04
+    container:
+      image: hashicorp/terraform:1.5
+    steps:
+      - name: Terraform
+        run: terraform -chdir="cloud" init
+  clean-up:
+    name: Clean Up
+    runs-on: ubuntu-22.04
+    container:
+      image: hashicorp/terraform:1.5
+    steps:
       - name: Delete artifacts
         uses: geekyeggo/delete-artifact@v2
         with:
