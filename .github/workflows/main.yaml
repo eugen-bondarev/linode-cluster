@@ -60,8 +60,12 @@ jobs:
         with:
           name: my-artifact
           path: ./
-      - name: Check
-        run: ls && ls ./secrets
+      - name: Init
+        run: terraform -chdir="cluster" init
+      - name: Plan
+        run: terraform -chdir="cluster" plan -var-file="variables.secret.tfvars" -out plan
+      - name: Apply
+        run: terraform -chdir="cluster" apply plan
   clean-up:
     needs: terraform-cluster
     name: Clean Up
