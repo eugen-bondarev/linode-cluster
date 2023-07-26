@@ -42,17 +42,16 @@ jobs:
     container:
       image: hashicorp/terraform:1.5
     steps:
-      # - name: Download artifacts
-      - uses: actions/download-artifact@v3
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
         with:
           name: state-artifact
           path: ./
-      - uses: actions/download-artifact@v3
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
         with:
           name: terraform-credentials-artifact
           path: ~/.terraform.d
-      - name: Test
-        run: cat ~/.terraform.d/credentials.tfrc.json
       - name: Init
         run: terraform -chdir="cloud" init
       - name: Plan
@@ -62,7 +61,7 @@ jobs:
       - name: Apply
         env:
           TF_VAR_token: ${{ secrets.TF_VAR_token }}
-        run: terraform -chdir="cloud" apply plan
+        run: terraform -chdir="cloud" apply
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
