@@ -36,6 +36,8 @@ jobs:
       - name: Init
         run: terraform -chdir="cloud" init
       - name: Plan
+        env:
+          TF_VAR_token: ${{ secrets.TF_VAR_token }}
         run: terraform -chdir="cloud" plan -var-file="terraform.tfvars"
   clean-up:
     needs: terraform-init
