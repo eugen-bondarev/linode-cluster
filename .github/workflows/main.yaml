@@ -38,7 +38,11 @@ jobs:
       - name: Plan
         env:
           TF_VAR_token: ${{ secrets.TF_VAR_token }}
-        run: terraform -chdir="cloud" plan -var-file="terraform.tfvars"
+        run: terraform -chdir="cloud" plan -var-file="terraform.tfvars" -out plan
+      - name: Apply
+        env:
+          TF_VAR_token: ${{ secrets.TF_VAR_token }}
+        run: terraform -chdir="cloud" apply plan
   clean-up:
     needs: terraform-init
     name: Clean Up

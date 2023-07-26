@@ -2,11 +2,11 @@
 
 First, review:
 
-`terraform -chdir="cloud" plan -var-file="terraform.tfvars"`
+`terraform -chdir="cloud" plan -var-file="terraform.tfvars" -out plan`
 
 Then apply the changes:
 
-`terraform -chdir="cloud" apply -var-file="terraform.tfvars" -auto-approve`
+`terraform -chdir="cloud" apply -auto-approve`
 
 # Deploying the cluster
 
@@ -16,4 +16,4 @@ Review:
 
 Apply the changes:
 
-`terraform -chdir="cluster" apply -var-file="variables.secret.tfvars" -auto-approve`
+`terraform -chdir="cluster" apply plan -auto-approve`
