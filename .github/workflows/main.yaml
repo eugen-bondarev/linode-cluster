@@ -23,7 +23,7 @@ jobs:
           path: ./
   terraform-init:
     needs: deploy
-    name: Terraform Init
+    name: Terraform
     runs-on: ubuntu-22.04
     container:
       image: hashicorp/terraform:1.5
@@ -33,8 +33,10 @@ jobs:
         with:
           name: my-artifact
           path: ./
-      - name: Terraform
+      - name: Init
         run: terraform -chdir="cloud" init
+      - name: Plan
+        run: terraform -chdir="cloud" plan -var-file="terraform.tfvars"
   clean-up:
     needs: terraform-init
     name: Clean Up
