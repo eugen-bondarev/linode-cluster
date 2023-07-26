@@ -20,3 +20,9 @@ controller:
                       shell('echo Hello World!')
                   }
               }
+          - script: >
+              job('demo2') {
+                  steps {
+                      shell('echo Hello GitOps!')
+                  }
+              }
