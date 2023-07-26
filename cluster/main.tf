@@ -22,7 +22,7 @@ provider "helm" {
 provider "google" {
   project     = "k8s-test-358716"
   region      = "eu-central"
-  credentials = "../secrets/google-auth.json"
+  credentials = "${abspath(path.root)}/../secrets/google-auth.json"
 }
 
 resource "kubernetes_namespace_v1" "namespaces" {
@@ -48,12 +48,12 @@ resource "helm_release" "portfolio" {
 
   set {
     name  = "github_key"
-    value = base64encode(file("../secrets/github-key"))
+    value = base64encode(file("${abspath(path.root)}/../secrets/github-key"))
   }
 
   set {
     name  = "github_key_pub"
-    value = file("../secrets/github-key.pub")
+    value = file("${abspath(path.root)}/../secrets/github-key.pub")
   }
 
   set {
