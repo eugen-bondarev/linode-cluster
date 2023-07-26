@@ -1,3 +1,13 @@
+terraform {
+
+  cloud {
+    organization = "eugen-bondarev-private"
+    workspaces {
+      name = "linode-cloud"
+    }
+  }
+}
+
 
 provider "kubernetes" {
   config_path = "${abspath(path.root)}/../secrets/kubeconfig"
