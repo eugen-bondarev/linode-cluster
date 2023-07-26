@@ -21,6 +21,7 @@ jobs:
           path: ./
   terraform-login:
     name: Terraform Login
+    needs: checkout
     runs-on: ubuntu-22.04
     env:
       TF_CLOUD_TOKEN: ${{ secrets.TF_CLOUD_TOKEN }}
@@ -33,8 +34,8 @@ jobs:
           name: terraform-credentials-artifact
           path: ~/.terraform.d/credentials.tfrc.json
   terraform-cloud:
-    needs: terraform-login
     name: Terraform Cloud
+    needs: terraform-login
     runs-on: ubuntu-22.04
     container:
       image: hashicorp/terraform:1.5
