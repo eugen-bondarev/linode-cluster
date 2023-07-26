@@ -57,7 +57,7 @@ jobs:
       - name: Plan
         env:
           TF_VAR_token: ${{ secrets.TF_VAR_token }}
-        run: terraform -chdir="cloud" plan -var-file="terraform.tfvars" -out plan
+        run: terraform -chdir="cloud" plan -var-file="terraform.tfvars"
       - name: Apply
         env:
           TF_VAR_token: ${{ secrets.TF_VAR_token }}
