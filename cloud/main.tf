@@ -1,8 +1,18 @@
+
+
 terraform {
+
   required_providers {
     linode = {
       source  = "linode/linode"
       version = "2.5.1"
+    }
+  }
+
+  cloud {
+    organization = "eugen-bondarev-private"
+    workspaces {
+      name = "linode-cloud"
     }
   }
 }

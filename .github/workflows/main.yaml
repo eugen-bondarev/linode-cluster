@@ -4,11 +4,9 @@ on:
     branches:
       - "main"
 jobs:
-  deploy:
-    name: Deploy
+  checkout:
+    name: Checkout
     runs-on: ubuntu-22.04
-    container:
-      image: hashicorp/terraform:1.5
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -21,8 +19,21 @@ jobs:
         with:
           name: state-artifact
           path: ./
+  terraform-login:
+    name: Terraform Login
+    runs-on: ubuntu-22.04
+    env:
+      TF_CLOUD_TOKEN: ${{ secrets.TF_CLOUD_TOKEN }}
+    steps:
+      - name: Create Terraform crdentials file
+        run: "echo { \"credentials\": { \"app.terraform.io\": { \"token\": \"$TF_CLOUD_TOKEN\" } } } > ~/.terraform.d/credentials.tfrc.json"
+      - name: Upload Terraform credentials
+        uses: actions/upload-artifact@v3
+        with:
+          name: terraform-credentials-artifact
+          path: ~/.terraform.d/credentials.tfrc.json
   terraform-cloud:
-    needs: deploy
+    needs: terraform-login
     name: Terraform Cloud
     runs-on: ubuntu-22.04
     container:
@@ -30,9 +41,6 @@ jobs:
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v3
-        with:
-          name: state-artifact
-          path: ./
       - name: Init
         run: terraform -chdir="cloud" init
       - name: Plan

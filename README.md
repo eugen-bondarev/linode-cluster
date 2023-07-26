@@ -1,8 +1,12 @@
 # Deploying the cloud infrastructure
 
+Initialize:
+
+`terraform -chdir="cloud" init`
+
 First, review:
 
-`terraform -chdir="cloud" plan -var-file="terraform.tfvars" -out plan`
+`terraform -chdir="cloud" plan -var-file="terraform.tfvars"`
 
 Then apply the changes:
 
@@ -10,10 +14,14 @@ Then apply the changes:
 
 # Deploying the cluster
 
+Initialize:
+
+`terraform -chdir="cluster" init`
+
 Review:
 
 `terraform -chdir="cluster" plan -var-file="variables.secret.tfvars"`
 
 Apply the changes:
 
-`terraform -chdir="cluster" apply plan -auto-approve`
+`terraform -chdir="cluster" apply -auto-approve`
