@@ -61,7 +61,7 @@ jobs:
       - name: Apply
         env:
           TF_VAR_token: ${{ secrets.TF_VAR_token }}
-        run: terraform -chdir="cloud" apply
+        run: terraform -chdir="cloud" apply -auto-approve
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -89,7 +89,7 @@ jobs:
       - name: Plan
         run: terraform -chdir="cluster" plan -var-file="variables.secret.tfvars"
       - name: Apply
-        run: terraform -chdir="cluster" apply
+        run: terraform -chdir="cluster" apply -auto-approve
   clean-up:
     needs: terraform-cluster
     name: Clean Up
