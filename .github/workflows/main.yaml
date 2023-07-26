@@ -29,16 +29,14 @@ jobs:
       TF_CLOUD_TOKEN: ${{ secrets.TF_CLOUD_TOKEN }}
     steps:
       - name: Create Terraform crdentials file
-        run: "mkdir ~/.terraform.d && echo 
+        run: 'mkdir ~/.terraform.d && echo 
           {
-            \"credentials\": 
-            { 
-              \"app.terraform.io\": 
-              { 
-                \"token\": \"$TF_CLOUD_TOKEN\" 
+            "credentials": { 
+              "app.terraform.io": { 
+                "token": "$TF_CLOUD_TOKEN" 
               } 
             } 
-          } > ~/.terraform.d/credentials.tfrc.json"
+          } > ~/.terraform.d/credentials.tfrc.json'
       - name: Upload Terraform credentials
         uses: actions/upload-artifact@v3
         with:
