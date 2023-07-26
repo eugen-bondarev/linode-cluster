@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: Create Terraform crdentials file
         run: "mkdir ~/.terraform.d && echo 
-          { 
+          {
             \"credentials\": 
             { 
               \"app.terraform.io\": 
@@ -60,6 +60,8 @@ jobs:
         with:
           name: terraform-credentials-artifact
           path: ~/.terraform.d
+      - name: Test
+        run: cat ~/.terraform.d/credentials.tfrc.json
       - name: Init
         run: terraform -chdir="cloud" init
       - name: Plan
