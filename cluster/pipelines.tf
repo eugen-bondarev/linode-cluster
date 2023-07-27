@@ -27,6 +27,16 @@ resource "helm_release" "jenkins" {
     })
   }
 
+  set {
+    name = "controller.adminUser"
+    value = var.jenkins.username
+  }
+
+  set {
+    name = "controller.adminPassword"
+    value = var.jenkins.password
+  }
+
   set_list {
     name = "controller.installPlugins"
     value = [
