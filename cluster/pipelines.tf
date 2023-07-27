@@ -7,10 +7,6 @@ resource "helm_release" "jenkins" {
   timeout       = 60 * 10
   recreate_pods = true
 
-  # values = [
-  #   file("./pipelines.test.yaml")
-  # ]
-
   set {
     name = "controller.JCasC.configScripts.welcome-message"
     value = yamlencode({
@@ -23,9 +19,9 @@ resource "helm_release" "jenkins" {
   set {
     name = "controller.JCasC.configScripts.init-scripts"
     value = yamlencode({
-      jobs: [
+      jobs : [
         {
-          script: file("./job-test.jenkins")
+          script : file("./job-test.jenkins")
         }
       ]
     })
