@@ -19,6 +19,17 @@ resource "helm_release" "jenkins" {
       }
     })
   }
+
+  set {
+    name = "controller.installPlugins"
+    value = yamlencode([
+      "git:latest",
+      "kubernetes:latest",
+      "workflow-aggregator:latest",
+      "configuration-as-code:latest",
+      "job-dsl:latest"
+    ])
+  }
 }
 
 resource "helm_release" "jenkins_expose_service" {
