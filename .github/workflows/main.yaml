@@ -52,8 +52,6 @@ jobs:
         with:
           name: terraform-credentials-artifact
           path: ~/.terraform.d
-      - name: Download Kubeconfig
-        run: terraform -chdir="cloud" output -raw kubeconfig | base64 -d > ./cluster/secrets/kubeconfig
       - name: Init
         run: terraform -chdir="cloud" init
       - name: Plan
@@ -88,6 +86,8 @@ jobs:
           path: ~/.terraform.d
       - name: Init
         run: terraform -chdir="cluster" init
+      - name: Download Kubeconfig
+        run: terraform -chdir="cloud" output -raw kubeconfig | base64 -d > ./cluster/secrets/kubeconfig
       - name: Plan
         run: terraform -chdir="cluster" plan -var-file="variables.secret.tfvars"
       - name: Apply
