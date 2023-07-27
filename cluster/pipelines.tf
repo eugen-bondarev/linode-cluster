@@ -13,9 +13,9 @@ resource "helm_release" "jenkins" {
 
   set {
     name = "controller.JCasC.configScripts.welcome-message"
-    value = jsonencode({
-      jenkins: {
-        systemMessage: "Lorem ipsum dolor sit amet 42!"
+    value = yamlencode({
+      jenkins : {
+        systemMessage : "Lorem ipsum dolor sit amet 42!"
       }
     })
   }
