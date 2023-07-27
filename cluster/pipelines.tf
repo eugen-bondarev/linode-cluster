@@ -27,7 +27,8 @@ resource "helm_release" "jenkins" {
       "kubernetes:latest",
       "workflow-aggregator:latest",
       "configuration-as-code:latest",
-      "job-dsl:latest"
+      "job-dsl:latest",
+      "blueocean:1.27.5"
     ]
   }
 }

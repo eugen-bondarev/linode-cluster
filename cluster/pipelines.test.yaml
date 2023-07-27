@@ -1,17 +1,6 @@
 controller:
-  # installPlugins:
-  #   - "git:latest"
-  #   - "kubernetes:latest"
-  #   - "workflow-aggregator:latest"
-  #   - "configuration-as-code:latest"
-  #   - "job-dsl:latest"
-  additionalPlugins:
-    - blueocean:1.27.5
   JCasC:
     configScripts:
-      # welcome-message: |
-      #   jenkins:
-      #     systemMessage: {{ .Values.testMsg }}
       pipeline-job: |
         jobs:
           - script: >
