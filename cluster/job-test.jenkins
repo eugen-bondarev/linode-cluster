@@ -1,0 +1,5 @@
+job('demo_job') {
+    steps {
+        shell('echo Hello GitOps!')
+    }
+}
