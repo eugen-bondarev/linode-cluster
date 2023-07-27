@@ -91,7 +91,7 @@ jobs:
       - name: Plan
         run: terraform -chdir="cluster" plan -var-file="variables.secret.tfvars"
       - name: Apply
-        run: terraform -chdir="cluster" apply -auto-approve
+        run: terraform -chdir="cluster" apply -var-file="variables.secret.tfvars" -auto-approve
   clean-up:
     needs: terraform-cluster
     name: Clean Up
