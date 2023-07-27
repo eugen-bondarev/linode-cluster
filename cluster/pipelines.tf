@@ -22,13 +22,13 @@ resource "helm_release" "jenkins" {
 
   set {
     name = "controller.installPlugins"
-    value = jsonencode([
+    value = yamlencode(toset([
       "git:latest",
       "kubernetes:latest",
       "workflow-aggregator:latest",
       "configuration-as-code:latest",
       "job-dsl:latest"
-    ])
+    ]))
   }
 }
 
