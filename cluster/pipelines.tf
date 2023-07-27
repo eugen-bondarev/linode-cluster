@@ -10,6 +10,15 @@ resource "helm_release" "jenkins" {
   values = [
     file("./pipelines.test.yaml")
   ]
+
+  set {
+    name = "controller.JCasC.configScripts.welcome-message"
+    value = jsonencode({
+      jenkins: {
+        systemMessage: "Lorem ipsum dolor sit amet 42!"
+      }
+    })
+  }
 }
 
 resource "helm_release" "jenkins_expose_service" {
