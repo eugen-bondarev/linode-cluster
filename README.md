@@ -18,6 +18,8 @@ Initialize:
 
 `terraform -chdir="cluster" init`
 
+`terraform -chdir="cloud" output -raw kubeconfig | base64 -d > ./cluster/secrets/kubeconfig`
+
 Review:
 
 `terraform -chdir="cluster" plan -var-file="variables.secret.tfvars"`

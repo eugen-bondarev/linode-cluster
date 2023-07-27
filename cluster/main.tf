@@ -3,19 +3,18 @@ terraform {
   cloud {
     organization = "eugen-bondarev-private"
     workspaces {
-      name = "linode-cloud"
+      name = "linode-cluster"
     }
   }
 }
 
-
 provider "kubernetes" {
-  config_path = "${abspath(path.root)}/../secrets/kubeconfig"
+  config_path = "${abspath(path.root)}/secrets/kubeconfig"
 }
 
 provider "helm" {
   kubernetes {
-    config_path = "${abspath(path.root)}/../secrets/kubeconfig"
+    config_path = "${abspath(path.root)}/secrets/kubeconfig"
   }
 }
 
