@@ -67,6 +67,20 @@ jobs:
         with:
           name: state-artifact
           path: ./
+  download-kubeconfig:
+    name: Download Kubeconfig
+    needs: terraform-cloud
+    runs-on: ubuntu-22.04
+    container:
+      image: python:3.12.0b4-alpine3.18
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: state-artifact
+          path: ./
+      - name: Download kubeconfig
+        run: python3 scripts/download-kubeconfig.py
   terraform-cluster:
     name: Terraform Cluster
     needs: terraform-cloud
