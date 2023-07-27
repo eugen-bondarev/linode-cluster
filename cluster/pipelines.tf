@@ -20,16 +20,16 @@ resource "helm_release" "jenkins" {
     })
   }
 
-  # set {
-  #   name = "controller.installPlugins"
-  #   value = yamlencode(toset([
-  #     "git:latest",
-  #     "kubernetes:latest",
-  #     "workflow-aggregator:latest",
-  #     "configuration-as-code:latest",
-  #     "job-dsl:latest"
-  #   ]))
-  # }
+  set_list {
+    name = "controller.installPlugins"
+    value = [
+      "git:latest",
+      "kubernetes:latest",
+      "workflow-aggregator:latest",
+      "configuration-as-code:latest",
+      "job-dsl:latest"
+    ]
+  }
 }
 
 resource "helm_release" "jenkins_expose_service" {
