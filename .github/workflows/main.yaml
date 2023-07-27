@@ -103,3 +103,7 @@ jobs:
         uses: geekyeggo/delete-artifact@v2
         with:
           name: state-artifact
+      - name: Delete artifacts
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: terraform-credentials-artifact
