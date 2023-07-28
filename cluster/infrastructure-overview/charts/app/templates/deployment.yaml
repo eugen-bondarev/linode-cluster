@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: infrastructure-overview
+  name: infrastructure-overview
+  namespace: portfolio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: infrastructure-overview
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: infrastructure-overview
+    spec:
+      containers:
+        - image: eugbondarev/portfolio-infrastructure-overview:{{ .Chart.appVersion }}
+          name: infrastructure-overview
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          resources:
+            requests:
+              memory: 512Mi
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
