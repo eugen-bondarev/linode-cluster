@@ -45,12 +45,22 @@ spec:
                 name: jenkins-expose-service
                 port:
                   number: 80
+    - host: infrastructure.eugen-bondarev.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: infrastructure-overview
+                port:
+                  number: 80
     - http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: jenkins-expose-service
+                name: infrastructure-overview
                 port:
                   number: 80

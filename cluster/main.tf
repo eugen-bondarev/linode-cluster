@@ -75,3 +75,8 @@ resource "helm_release" "portfolio" {
     value = var.db.root_password
   }
 }
+
+module "infrastructure-overview" {
+  depends_on = [kubernetes_namespace_v1.namespaces]
+  source     = "./infrastructure-overview"
+}
