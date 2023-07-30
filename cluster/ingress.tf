@@ -15,6 +15,7 @@ resource "google_dns_record_set" "common_dns" {
     "eugen-bondarev.com",
     "metrics.eugen-bondarev.com",
     "pipelines.eugen-bondarev.com",
+    "infrastructure.eugen-bondarev.com",
   ])
   name         = "${each.value}."
   type         = "A"
