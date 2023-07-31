@@ -1,12 +1,11 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: github-key
-  namespace: portfolio
-data:
-  private.key: {{ .Values.github_key }}
-  public.key: {{ .Values.github_key_pub }}
----
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: github-key
+#   namespace: portfolio
+# data:
+#   private.key: {{ .Values.github_key }}
+#   public.key: {{ .Values.github_key_pub }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,43 +36,43 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: mysql
-        - image: alpine:latest
-          name: alpine
-          env:
-            - name: MYSQL_ROOT_PASSWORD
-              value: {{ .Values.db.root_password }}
-          command: [
-            'sh', '-c', '
-              apk update &&
-              apk add git && 
-              apk add openssh-client && 
-              apk add mysql-client && 
-              apk add python3 && 
-              apk add mariadb-connector-c && 
-              mkdir /root/.ssh &&
-              cat /keys/github | base64 -d > ~/.ssh/id_rsa &&
-              cp /keys/github.pub ~/.ssh/github.pub &&
-              chmod -R 400 ~/.ssh &&
-              ssh-keyscan github.com >> ~/.ssh/known_hosts &&
-              git clone git@github.com:eugen-bondarev/linode-cluster-db-backup.git &&
-              git clone git@github.com:eugen-bondarev/linode-cluster-db-backup-script.git &&
-              git config --global user.email "eug.bondarev@gmail.com" &&
-              python3 /linode-cluster-db-backup-script/main.py'
-          ]
-          volumeMounts:
-            - name: github-key-vol
-              mountPath: /keys
-            - name: mysql
-              mountPath: /var/lib/mysql
+        # - image: alpine:latest
+        #   name: alpine
+        #   env:
+        #     - name: MYSQL_ROOT_PASSWORD
+        #       value: {{ .Values.db.root_password }}
+        #   command: [
+        #     'sh', '-c', '
+        #       apk update &&
+        #       apk add git && 
+        #       apk add openssh-client && 
+        #       apk add mysql-client && 
+        #       apk add python3 && 
+        #       apk add mariadb-connector-c && 
+        #       mkdir /root/.ssh &&
+        #       cat /keys/github | base64 -d > ~/.ssh/id_rsa &&
+        #       cp /keys/github.pub ~/.ssh/github.pub &&
+        #       chmod -R 400 ~/.ssh &&
+        #       ssh-keyscan github.com >> ~/.ssh/known_hosts &&
+        #       git clone git@github.com:eugen-bondarev/linode-cluster-db-backup.git &&
+        #       git clone git@github.com:eugen-bondarev/linode-cluster-db-backup-script.git &&
+        #       git config --global user.email "eug.bondarev@gmail.com" &&
+        #       python3 /linode-cluster-db-backup-script/main.py'
+        #   ]
+        #   volumeMounts:
+        #     - name: github-key-vol
+        #       mountPath: /keys
+        #     - name: mysql
+        #       mountPath: /var/lib/mysql
       volumes:
         - name: mysql
           persistentVolumeClaim:
             claimName: mysql
-        - name: github-key-vol
-          configMap:
-            name: github-key
-            items:
-              - key: private.key
-                path: github
-              - key: public.key
-                path: github.pub
+        # - name: github-key-vol
+        #   configMap:
+        #     name: github-key
+        #     items:
+        #       - key: private.key
+        #         path: github
+        #       - key: public.key
+        #         path: github.pub

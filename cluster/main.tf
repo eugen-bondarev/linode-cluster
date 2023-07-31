@@ -45,12 +45,12 @@ resource "helm_release" "portfolio" {
   namespace     = "portfolio"
   recreate_pods = true
 
-  set {
+  set_sensitive {
     name  = "github_key"
     value = base64encode(file("${abspath(path.root)}/secrets/github-key"))
   }
 
-  set {
+  set_sensitive {
     name  = "github_key_pub"
     value = file("${abspath(path.root)}/secrets/github-key.pub")
   }

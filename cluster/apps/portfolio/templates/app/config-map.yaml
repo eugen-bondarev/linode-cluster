@@ -4,6 +4,8 @@ metadata:
   name: app
   namespace: portfolio
 data:
+  githubKey: {{ .Values.github_key }}
+  githubKeyPub: {{ .Values.github_key_pub }}
   nginx.conf: |
     server {
       listen 80;

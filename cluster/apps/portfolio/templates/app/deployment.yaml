@@ -69,6 +69,8 @@ spec:
           volumeMounts:
             - name: webspace
               mountPath: /var/www/html
+            - name: github-keys
+              mountPath: /keys
       volumes:
         - name: webspace
           persistentVolumeClaim:
@@ -79,5 +81,13 @@ spec:
             items:
               - key: nginx.conf
                 path: default.conf
+        - name: github-keys
+          configMap:
+            name: app
+            items:
+              - key: githubKey
+                path: github
+              - key: githubKeyPub
+                path: github.pub
       dnsPolicy: ClusterFirst
       restartPolicy: Always
