@@ -39,8 +39,18 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command:
-                  ["/bin/sh", "-c", "cp -a /var/www/files/. /var/www/html"]
+                command: [
+                    "/bin/sh",
+                    "-c",
+                    'cp -a /var/www/files/. /var/www/html &&
+                    mkdir ~/.ssh &&
+                    ssh-keyscan github.com >> ~/.ssh/known_hosts &&
+                    cat /keys/github | base64 -d > ~/.ssh/id_rsa &&
+                    cp /keys/github.pub ~/.ssh/github.pub &&
+                    chmod -R 400 ~/.ssh &&
+                    git config --global user.email "eug.bondarev@gmail.com" &&
+                    git clone git@github.com:eugen-bondarev/linode-cluster-db-backup.git /var/www/linode-cluster-db-backup',
+                  ]
           env:
             - name: DB_NAME
               value: {{.Values.db.name}}
@@ -60,19 +70,19 @@ spec:
               value: "true"
             - name: WP_ALLOW_REPAIR
               value: "true"
-          command: [
-              "sh",
-              "-c",
-              '
-              mkdir ~/.ssh &&
-              ssh-keyscan github.com >> ~/.ssh/known_hosts &&
-              cat /keys/github | base64 -d > ~/.ssh/id_rsa &&
-              cp /keys/github.pub ~/.ssh/github.pub &&
-              chmod -R 400 ~/.ssh &&
-              git config --global user.email "eug.bondarev@gmail.com" &&
-              git clone git@github.com:eugen-bondarev/linode-cluster-db-backup.git /var/www/linode-cluster-db-backup
-              ',
-            ]
+          # command: [
+          #     "sh",
+          #     "-c",
+          #     '
+          #     mkdir ~/.ssh &&
+          #     ssh-keyscan github.com >> ~/.ssh/known_hosts &&
+          #     cat /keys/github | base64 -d > ~/.ssh/id_rsa &&
+          #     cp /keys/github.pub ~/.ssh/github.pub &&
+          #     chmod -R 400 ~/.ssh &&
+          #     git config --global user.email "eug.bondarev@gmail.com" &&
+          #     git clone git@github.com:eugen-bondarev/linode-cluster-db-backup.git /var/www/linode-cluster-db-backup
+          #     ',
+          #   ]
           securityContext:
             runAsUser: 0
           ports:
