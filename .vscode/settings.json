@@ -1,3 +1,6 @@
 {
-  "yaml.format.bracketSpacing": false
+  "yaml.format.bracketSpacing": false,
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  }
 }
