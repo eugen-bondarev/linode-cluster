@@ -83,8 +83,8 @@ spec:
           #     git clone git@github.com:eugen-bondarev/linode-cluster-db-backup.git /var/www/linode-cluster-db-backup
           #     ',
           #   ]
-          securityContext:
-            runAsUser: 0
+          # securityContext:
+          #   runAsUser: 0
           ports:
             - containerPort: 9000
               protocol: TCP
