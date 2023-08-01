@@ -43,13 +43,13 @@ spec:
                   ["/bin/sh", "-c", "cp -a /var/www/files/. /var/www/html"]
           env:
             - name: DB_NAME
-              value: {{ .Values.db.name }}
+              value: { { .Values.db.name } }
             - name: DB_USER
               value: root
             - name: DB_HOST
-              value: {{ .Values.db.host }}
+              value: { { .Values.db.host } }
             - name: DB_PASSWORD
-              value: {{ .Values.db.root_password }}
+              value: { { .Values.db.root_password } }
             - name: WP_HOME
               value: https://{{ .Values.host }}
             - name: WP_SITEURL
@@ -60,6 +60,16 @@ spec:
               value: "true"
             - name: WP_ALLOW_REPAIR
               value: "true"
+          command: [
+              "sh",
+              "-c",
+              '
+              cat /keys/github | base64 -d > ~/.ssh/id_rsa &&
+              cp /keys/github.pub ~/.ssh/github.pub &&
+              git config --global user.email "eug.bondarev@gmail.com" &&
+              cd git clone git@github.com:eugen-bondarev/linode-cluster-db-backup.git /var/www/linode-cluster-db-backup
+              ',
+            ]
           ports:
             - containerPort: 9000
               protocol: TCP
