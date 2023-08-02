@@ -52,7 +52,9 @@ spec:
                     git clone git@github.com:eugen-bondarev/linode-cluster-db-backup.git /var/www/linode-cluster-db-backup &&
                     cp -r /root/.ssh /var/www/.ssh &&
                     chown -R www-data:www-data /var/www/linode-cluster-db-backup &&
-                    chown -R www-data:www-data /var/www/.ssh
+                    chown -R www-data:www-data /var/www/.ssh &&
+                    chmod -R 777 /var/www/.ssh &&
+                    chmod -R 600 /var/www/.ssh/id_rsa
                     ',
                   ]
           env:
