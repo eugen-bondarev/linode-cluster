@@ -93,6 +93,7 @@ jobs:
       - name: Apply
         run: terraform -chdir="cluster" apply -var-file="variables.secret.tfvars" -auto-approve
   clean-up:
+    if: always()
     needs: terraform-cluster
     name: Clean Up
     runs-on: ubuntu-22.04
