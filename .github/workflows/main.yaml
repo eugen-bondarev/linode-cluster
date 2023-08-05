@@ -28,3 +28,11 @@ jobs:
         env:
           TF_VAR_token: ${{ secrets.TF_VAR_token }}
         run: terraform -chdir="cloud" apply -auto-approve
+      - name: Init Cluster
+        run: terraform -chdir="cluster" init
+      - name: Download Kubeconfig
+        run: terraform -chdir="cloud" output -raw kubeconfig | base64 -d > ./cluster/secrets/kubeconfig
+      - name: Plan Cluster
+        run: terraform -chdir="cluster" plan -var-file="variables.secret.tfvars"
+      - name: Apply Cluster
+        run: terraform -chdir="cluster" apply -var-file="variables.secret.tfvars" -auto-approve
