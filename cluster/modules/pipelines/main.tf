@@ -1,5 +1,4 @@
 resource "helm_release" "jenkins" {
-  depends_on    = [kubernetes_namespace_v1.namespaces]
   name          = "jenkins"
   repository    = "https://charts.jenkins.io"
   chart         = "jenkins"
@@ -21,19 +20,19 @@ resource "helm_release" "jenkins" {
     value = yamlencode({
       jobs : [
         {
-          script : file("./job-test.jenkins")
+          script : file("./${path.module}/config/jobs/demo.jenkins")
         }
       ]
     })
   }
 
   set {
-    name = "controller.adminUser"
+    name  = "controller.adminUser"
     value = var.jenkins.username
   }
 
-  set {
-    name = "controller.adminPassword"
+  set_sensitive {
+    name  = "controller.adminPassword"
     value = var.jenkins.password
   }
 

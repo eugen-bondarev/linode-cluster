@@ -1,5 +1,4 @@
 terraform {
-
   cloud {
     organization = "eugen-bondarev-private"
     workspaces {
@@ -57,4 +56,10 @@ module "metrics" {
 module "ingress" {
   depends_on = [kubernetes_namespace_v1.namespaces]
   source     = "./modules/ingress"
+}
+
+module "pipelines" {
+  depends_on = [kubernetes_namespace_v1.namespaces]
+  source     = "./modules/pipelines"
+  jenkins    = var.jenkins
 }
