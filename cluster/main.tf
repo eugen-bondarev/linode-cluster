@@ -48,3 +48,8 @@ module "infrastructure-overview" {
   depends_on = [kubernetes_namespace_v1.namespaces]
   source     = "./modules/infrastructure-overview"
 }
+
+module "metrics" {
+  depends_on = [kubernetes_namespace_v1.namespaces]
+  source     = "./modules/metrics"
+}
