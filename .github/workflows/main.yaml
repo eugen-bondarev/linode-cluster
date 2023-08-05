@@ -18,3 +18,13 @@ jobs:
         run: 'mkdir ~/.terraform.d && echo "{ \"credentials\": { \"app.terraform.io\": { \"token\": \"${TF_CLOUD_TOKEN}\" } } }" > ~/.terraform.d/credentials.tfrc.json'
         env:
           TF_CLOUD_TOKEN: ${{ secrets.TF_CLOUD_TOKEN }}
+      - name: Init Cloud
+        run: terraform -chdir="cloud" init
+      - name: Plan Cloud
+        env:
+          TF_VAR_token: ${{ secrets.TF_VAR_token }}
+        run: terraform -chdir="cloud" plan -var-file="terraform.tfvars"
+      - name: Apply Cloud
+        env:
+          TF_VAR_token: ${{ secrets.TF_VAR_token }}
+        run: terraform -chdir="cloud" apply -auto-approve
