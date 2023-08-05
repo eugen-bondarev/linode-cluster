@@ -4,8 +4,8 @@ on:
     branches:
       - "main"
 jobs:
-  prepare-deploy:
-    name: Prepare infrastructure, deploy cluster
+  deploy:
+    name: Deploy infrastructure & cluster
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
