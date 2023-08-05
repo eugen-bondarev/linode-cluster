@@ -53,3 +53,8 @@ module "metrics" {
   depends_on = [kubernetes_namespace_v1.namespaces]
   source     = "./modules/metrics"
 }
+
+module "ingress" {
+  depends_on = [kubernetes_namespace_v1.namespaces]
+  source     = "./modules/ingress"
+}
