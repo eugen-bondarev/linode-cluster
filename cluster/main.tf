@@ -46,7 +46,7 @@ module "portfolio" {
 module "infrastructure-overview" {
   depends_on = [kubernetes_namespace_v1.namespaces]
   source     = "./modules/infrastructure-overview"
-  appVersion = "1.2.5"
+  appVersion = "1.3.0"
 }
 
 module "metrics" {
