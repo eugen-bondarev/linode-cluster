@@ -44,5 +44,6 @@ resource "google_dns_record_set" "common_dns" {
   type         = "A"
   ttl          = 300
   managed_zone = "default-zone"
-  rrdatas      = [data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.ip]
+  # rrdatas      = [data.kubernetes_service_v1.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.ip]
+  rrdatas = ["76.76.21.21"]
 }
